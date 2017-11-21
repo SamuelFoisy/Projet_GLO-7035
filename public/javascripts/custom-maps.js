@@ -1,42 +1,68 @@
-function initialiserMapVilleQc(element) {
-    let positionUlaval = new google.maps.LatLng(46.779249, -71.269680);
+var map, searchCenterPoint, searchRangeCircle, marker;
 
-    map = new google.maps.Map(element, {
-        center: positionUlaval,
-        zoom: 12
-    });
+function initializeMapQuebec(element) {
+    const POSITION_ULAVAL = new google.maps.LatLng(46.779249, -71.269680);
 
-    let marker = new google.maps.Marker({position: positionUlaval});
-    marker.setMap(map);
+    function initSearchCenterPoint() {
+        let searchCenterPointInput = document.getElementById('search-center-point');
+        $('#search-center-point').val('Université Laval');
+        searchCenterPoint = new google.maps.places.Autocomplete(searchCenterPointInput);
+        searchCenterPoint.bindTo('bounds', map);
 
-    let infoWindow = new google.maps.InfoWindow({content: "test"});
-    google.maps.event.addListener(marker, 'click', function (event) {
-        infoWindow.open(map, marker);
-    });
+        google.maps.event.addListener(searchCenterPoint, 'place_changed', placeMarker);
+    }
 
+    function initSearchRange() {
+        $("#search-range").on('change', drawSearchRange);
+    }
 
-    let acOptions = {
-        types: ['establishment']
-    };
+    function placeMarker() {
+        let place = searchCenterPoint.getPlace();
 
-    let searchField = new google.maps.places.Autocomplete(document.getElementById('map-autocomplete-search'));
-    searchField.bindTo('bounds', map);
-
-    google.maps.event.addListener(searchField,'place_changed',function () {
-        infoWindow.close();
-
-        let place = searchField.getPlace();
-
-        if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-        }
-        else
-        {
-            map.setCenter(place.geometry.location);
-            map.setZoom(15);
-        }
+        map.setCenter(place.geometry.location);
+        map.setZoom(12);
 
         marker.setPosition(place.geometry.location);
 
-    })
+        drawSearchRange();
+    }
+
+    function drawSearchRange() {
+        let place = searchCenterPoint.getPlace();
+
+        let location = place ? place.geometry.location : POSITION_ULAVAL;
+
+        if (searchRangeCircle) {
+            searchRangeCircle.setMap();
+        }
+
+        searchRangeCircle = new google.maps.Circle({
+            strokeColor: '#2E6DA4',
+            strokeOpacity: 0.7,
+            strokeWeight: 1,
+            fillColor: '#337AB7',
+            fillOpacity: 0.15,
+            map: map,
+            center: location,
+            radius: getSearchRange() * 1000
+        });
+    }
+
+    function getSearchRange() {
+        let searchRangeText = $("#search-range").val();
+        return searchRangeText ? parseInt(searchRangeText) : 5;
+    }
+
+    map = new google.maps.Map(element, {
+        zoom: 12,
+        center: POSITION_ULAVAL
+    });
+
+    marker = new google.maps.Marker({position: POSITION_ULAVAL, draggable: false});
+    marker.setMap(map);
+
+    initSearchCenterPoint();
+    initSearchRange();
+    drawSearchRange();
 }
+

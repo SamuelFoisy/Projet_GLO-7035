@@ -1,8 +1,35 @@
-body {
-    padding: 50px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+/* SLIDER */
+.slider-selection {
+    background-image: linear-gradient(to bottom, #60a9de 0, #e4f0f9 100%);
 }
 
-a {
-    color: #00B7FF;
+.slider.slider-horizontal {
+    height: 55px;
+    margin-left: 10px;
 }
+
+.slider.slider-horizontal .slider-track {
+    height: 7px;
+    margin-top: -5px;
+    top: 60%;
+}
+
+.slider-handle {
+    width: 18px;
+    height: 18px;
+    top: 40%;
+}
+
+.slider .tooltip.top {
+    margin-top: -11px;
+}
+
+.slider .tooltip.bottom {
+    margin-top: 21px;
+}
+
+/*
+
+
+
+*/

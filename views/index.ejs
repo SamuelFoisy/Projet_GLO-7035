@@ -16,14 +16,17 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <!-- Core Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet"/>
+
     <!-- Custom Theme CSS -->
     <link href="/stylesheets/theme.css" rel="stylesheet">
 
     <!-- Custom Bootstrap Slider CSS -->
     <link href="/stylesheets/bootstrap/custom-bootstrap-slider.css" rel="stylesheet">
 
-    <!-- Custom Select2 CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet"/>
+    <!-- Custom Theme CSS -->
+    <link href="/stylesheets/style.css" rel="stylesheet">
 
     <title>Du Proprio BI App</title>
 
@@ -75,15 +78,13 @@
     <div class="row">
         <div class="col-md-5">
             <h1>Définir la zone de recherche</h1>
-            <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it, but it
-                makes a great use of the standard Bootstrap core components. Feel free to use this template for any
-                project you want!</p>
+            <p>Vous pouvez ici délimiter la zone dans laquelle nous effectuerons l'analyse des propriétés.</p>
+            <p>Veuillez choisir un point central ainsi qu'une distance de recherche.</p>
             <div class="form-group">
-                <label for="search-range-filter">Distance de recherche:</label>
-                <input type="number" class="form-control bootstrap-slider" id="search-range-filter">
-                <br>
-                <label for="map-autocomplete-search">Point central</label>
-                <input type="text" class="form-control" id="map-autocomplete-search">
+                <label for="search-center-point">Point central:</label>
+                <input type="text" class="form-control" id="search-center-point">
+                <label for="search-range">Distance de recherche (km):</label>
+                <input type="number" class="form-control bootstrap-slider" id="search-range">
             </div>
         </div>
         <!-- /.col-md-5 -->
@@ -272,7 +273,7 @@
     generateSliders();
 
     function initMap() {
-        initialiserMapVilleQc(document.getElementById('map'));
+        initializeMapQuebec(document.getElementById('map'));
     }
 </script>
 </body>
