@@ -9,22 +9,23 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Titre à déterminer</title>
-    <!-- Theme CSS -->
-    <link href="/stylesheets/theme.css" rel="stylesheet">
-
-    <!-- Bootstrap Slider CSS -->
-    <link href="/stylesheets/bootstrap/custom-bootstrap-slider.css" rel="stylesheet">
-
-    <!-- Select2 CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet"/>
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <!-- Custom Theme CSS -->
+    <link href="/stylesheets/theme.css" rel="stylesheet">
+
+    <!-- Custom Bootstrap Slider CSS -->
+    <link href="/stylesheets/bootstrap/custom-bootstrap-slider.css" rel="stylesheet">
+
+    <!-- Custom Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet"/>
+
+    <title>Du Proprio BI App</title>
 
 </head>
 
@@ -50,7 +51,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="#">Propriétés</a>
+                    <a href="#">Du Proprio BI App</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav pull-right">
@@ -72,10 +73,6 @@
 
     <!-- Heading Row -->
     <div class="row">
-        <div class="col-md-7">
-            <div id="map" class="img-responsive img-rounded" style="height: 45vh;"></div>
-        </div>
-        <!-- /.col-md-7 -->
         <div class="col-md-5">
             <h1>Définir la zone de recherche</h1>
             <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it, but it
@@ -84,9 +81,16 @@
             <div class="form-group">
                 <label for="search-range-filter">Distance de recherche:</label>
                 <input type="number" class="form-control bootstrap-slider" id="search-range-filter">
+                <br>
+                <label for="map-autocomplete-search">Point central</label>
+                <input type="text" class="form-control" id="map-autocomplete-search">
             </div>
         </div>
         <!-- /.col-md-5 -->
+        <div class="col-md-7">
+            <div id="map" class="img-responsive img-rounded" style="height: 45vh;"></div>
+        </div>
+        <!-- /.col-md-7 -->
     </div>
     <!-- /.row -->
 
@@ -234,139 +238,42 @@
 </div>
 <!-- /.container -->
 
-<!-- jQuery -->
+<!-- Core jQuery Javascript -->
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 
-<!-- Bootstrap Slider JavaScript -->
+<!-- Core Bootstrap Slider JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.9.0/bootstrap-slider.min.js"></script>
 
-<!-- ChartJS Core JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
-
-<!-- Select2 JavaScript -->
+<!-- Core Select2 JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
 
-<script>
-    function generateChart(selector, parameters) {
-        return new Chart($(selector).get(0).getContext('2d'), parameters);
-    }
+<!-- Core ChartJS JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
 
-    let averagePricePieChart = generateChart('#averagePrice', {
-        type: 'pie',
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: 'Prix',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'Prix moyens',
-                fontSize: 22,
-                fontColor: '#000'
-            },
-            legend: {
-                display: true,
-                position: 'bottom'
-            }
-        }
-    });
+<!-- Core Google Maps JavaScript -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXlcOYk3fPdDJfxdPCWoHFkBX4aYspl2A&callback=initMap&libraries=places"
+        async defer></script>
 
+<!-- Custom ChartJS JavaScript -->
+<script src="/javascripts/custom-chart.js"></script>
 
-    let houseTypeCountPieChart = generateChart('#houseTypeCount', {
-        type: 'bar',
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: 'Nombre de maisons',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'Décompte par type de propriété',
-                fontSize: 22,
-                fontColor: '#000'
-            },
-            legend: {
-                display: true,
-                position: 'bottom'
-            }
-        }
-    });
+<!-- Custom Slider JavaScript -->
+<script src="/javascripts/custom-slider.js"></script>
 
-</script>
-
-<script>
-    let map;
-    let markers = [];
-
-    function initMap() {
-
-        let initLat = 40.848447;
-        let initLng = -73.856077;
-
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: initLat, lng: initLng},
-            zoom: 16
-        });
-    }
-</script>
-
-<script>
-    $(".bootstrap-slider[data-slider-value*='[']").slider({
-        "tooltip_split": "true"
-    });
-
-
-    $(".bootstrap-slider:not([data-slider-value*='['])").slider({});
-</script>
+<!-- Custom Google Maps JavaScript -->
+<script src="/javascripts/custom-maps.js"></script>
 
 <script>
     $(document).ready(function () {
         $('.multi-select').select2();
     });
-</script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXlcOYk3fPdDJfxdPCWoHFkBX4aYspl2A&callback=initMap"
-        async defer></script>
+    generateSliders();
+
+    function initMap() {
+        initialiserMapVilleQc(document.getElementById('map'));
+    }
+</script>
 </body>
 </html>
