@@ -83,8 +83,9 @@
             <div class="form-group">
                 <label for="search-center-point">Point central:</label>
                 <input type="text" class="form-control" id="search-center-point">
-                <label for="search-range">Distance de recherche (km):</label>
-                <input type="number" class="form-control bootstrap-slider" id="search-range">
+                <label for="search-range" style="margin-top: 10px;">Distance de recherche (km):</label>
+                <input type="number" class="form-control bootstrap-slider" id="search-range"
+                       data-slider-min="5" data-slider-max="100">
             </div>
         </div>
         <!-- /.col-md-5 -->
@@ -104,36 +105,78 @@
                 <div class="panel panel-default" id="panel1">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            Veuillez choisir vos critères de recherche
-                            <a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne" class="pull-right">
+                            Veuillez définir vos critères de recherche
+                            <a class="pull-right" data-toggle="collapse" data-target="#collapseFilters"
+                               aria-expanded="false" aria-controls="collapseFilters">
                                 <i class="fa fa-chevron-down"></i>
                             </a>
                         </h4>
 
                     </div>
-                    <div id="collapseOne" class="panel-collapse collapse in">
+                    <div id="collapseFilters" class="panel-collapse collapse in">
                         <div class="panel-body">
-                            <form>
-                                <div class="col col-md-12">
-
+                            <form action="/refresh_graphs">
+                                <div class="form-group">
+                                    <label for="property-type-filter">Types de propriétés affichés:</label>
+                                    <select id="property-type-filter" class="form-control multi-select"
+                                            name="property-type[]"
+                                            multiple="multiple">
+                                        <optgroup label="Maison unifamiliale">
+                                            <option value="BUNGALOW">Bungalow</option>
+                                            <option value="JUMELE">Jumelé</option>
+                                            <option value="MAISON_2_ETAGES">Maison 2 étages</option>
+                                            <option value="MAISON_MOBILE">Maison mobile</option>
+                                            <option value="MAISON_ETC">etc.</option>
+                                        </optgroup>
+                                        <optgroup label="Condo / Loft">
+                                            <option value="CONDO">Condo</option>
+                                            <option value="LOFT">Loft</option>
+                                            <option value="PENTHOUSE">Penthouse</option>
+                                            <option value="RESIDENCE_RETRAITE">Résidence de retraités</option>
+                                        </optgroup>
+                                        <optgroup label="Chalet">
+                                            <option value="CHALET">Chalet</option>
+                                            <option value="CHALET_VILLEGIATURE">Chalet de villégiature</option>
+                                        </optgroup>
+                                        <optgroup label="Multiplex / Immeuble à revenus">
+                                            <option value="DUPLEX">Duplex</option>
+                                            <option value="TRIPLEX">Triplex</option>
+                                            <option value="QUADRUPLEX">Quadruplex</option>
+                                            <option value="QUINTUPLEX">Quintuplex</option>
+                                            <option value="MULTIPLEX_6_PLUS">6 unités ou plus</option>
+                                        </optgroup>
+                                        <optgroup label="Terrain">
+                                            <option value="SOMETHING_TERRAIN_SOMETHING">Something terrain
+                                                something
+                                            </option>
+                                            <option value="TERRAIN_ETC">etc.</option>
+                                        </optgroup>
+                                        <optgroup label="Commercial">
+                                            <option value="AUBERGE">Auberge</option>
+                                            <option value="COMMERCIAL_ETC">etc</option>
+                                        </optgroup>
+                                        <optgroup label="Ferme / Fermette">
+                                            <option value="FERME">Ferme</option>
+                                            <option value="FERMETTE">Fermette</option>
+                                        </optgroup>
+                                    </select>
                                 </div>
-                                <!-- /.col-md-12 -->
-                                <div class="col col-md-6">
-                                    <div class="form-group">
-                                        <label for="sliderTest">Filter by price interval: <b>€ 10</b> </label>
-                                        <input id="sliderTest" type="text"
-                                               class="span2"
-                                               value=""
-                                               data-slider-min="10"
-                                               data-slider-max="1000"
-                                               data-slider-step="5"
-                                               data-slider-value="[250,450]"
-                                               data-slider-tooltip="always"/> <b>€
-                                            1000</b>
-                                        <label for="minimum-price-filter">Prix minimum:</label>
-                                        <input type="number" class="form-control bootstrap-slider"
-                                               id="minimum-price-filter">
-                                    </div>
+                                <div class="form-group">
+                                    <label for="price-range-filter">Marge de prix ($):</label>
+                                    <input type="number" id="price-range-filter" class="form-control bootstrap-slider"
+                                           data-slider-min="0" data-slider-max="5000000" data-slider-value="[0,5000000]"
+                                           data-slider-step="25000" data-slider-tooltip="always">
+                                </div>
+                                <div class="form-group">
+                                    <label for="room-filter">Nombre de chambres:</label>
+                                    <select class="form-control" id="room-filter">
+                                        <option>Peu importe</option>
+                                        <option>1+</option>
+                                        <option>2+</option>
+                                        <option>3+</option>
+                                        <option>4+</option>
+                                        <option>5+</option>
+                                    </select>
                                 </div>
                                 <button type="button" ref="#" class="btn btn-primary btn-lg pull-right">Rafraîchir
                                 </button>
@@ -143,74 +186,7 @@
                 </div>
             </div>
             <!-- /.row -->
-            <div class="container">
-                <h2>Vertical (basic) form</h2>
-                <form action="/action_page.php">
-                    <div class="form-group">
-                        <label for="property-type">Types de propriétés:</label>
-                        <select id="property-type" class="form-control multi-select" name="property-type[]"
-                                multiple="multiple">
-                            <optgroup label="Maison unifamiliale">
-                                <option value="BUNGALOW">Bungalow</option>
-                                <option value="JUMELE">Jumelé</option>
-                                <option value="MAISON_2_ETAGES">Maison 2 étages</option>
-                                <option value="MAISON_MOBILE">Maison mobile</option>
-                                <option value="MAISON_ETC">etc.</option>
-                            </optgroup>
-                            <optgroup label="Condo / Loft">
-                                <option value="CONDO">Condo</option>
-                                <option value="LOFT">Loft</option>
-                                <option value="PENTHOUSE">Penthouse</option>
-                                <option value="RESIDENCE_RETRAITE">Résidence de retraités</option>
-                            </optgroup>
-                            <optgroup label="Chalet">
-                                <option value="CHALET">Chalet</option>
-                                <option value="CHALET_VILLEGIATURE">Chalet de villégiature</option>
-                            </optgroup>
-                            <optgroup label="Multiplex / Immeuble à revenus">
-                                <option value="DUPLEX">Duplex</option>
-                                <option value="TRIPLEX">Triplex</option>
-                                <option value="QUADRUPLEX">Quadruplex</option>
-                                <option value="QUINTUPLEX">Quintuplex</option>
-                                <option value="MULTIPLEX_6_PLUS">6 unités ou plus</option>
-                            </optgroup>
-                            <optgroup label="Terrain">
-                                <option value="SOMETHING_TERRAIN_SOMETHING">Something terrain
-                                    something
-                                </option>
-                                <option value="TERRAIN_ETC">etc.</option>
-                            </optgroup>
-                            <optgroup label="Commercial">
-                                <option value="AUBERGE">Auberge</option>
-                                <option value="COMMERCIAL_ETC">etc</option>
-                            </optgroup>
-                            <optgroup label="Ferme / Fermette">
-                                <option value="FERME">Ferme</option>
-                                <option value="FERMETTE">Fermette</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="price-range-filter">Prix:</label>
-                        <input type="number" id="price-range-filter" class="form-control bootstrap-slider"
-                               data-slider-min="0" data-slider-max="5000000" data-slider-value="[0,5000000]"
-                               data-slider-step="25000" data-slider-tooltip="always">
-                    </div>
-                    <div class="form-group">
-                        <label for="sel1">Select list:</label>
-                        <select class="form-control" id="sel1">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                        </select>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" name="remember"> Remember me</label>
-                    </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-            </div>
+
 
             <!-- Content Row -->
             <div class="row">
@@ -242,6 +218,9 @@
 <!-- Core jQuery Javascript -->
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+<!-- Core Bootstrap JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <!-- Core Bootstrap Slider JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.9.0/bootstrap-slider.min.js"></script>

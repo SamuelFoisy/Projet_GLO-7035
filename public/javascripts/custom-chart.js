@@ -1,7 +1,3 @@
-function generateChart(selector, parameters) {
-    return new Chart($(selector).get(0).getContext('2d'), parameters);
-}
-
 function generateCustomBarChart(selector, title, labels, values, showLegend = false) {
     generateCustomChart('bar', selector, title, labels, values, showLegend);
 }
@@ -35,6 +31,10 @@ function generateCustomChart(type, selector, title, labels, values, showLegend =
             }
         }
     });
+}
+
+function generateChart(selector, parameters) {
+    return new Chart($(selector).get(0).getContext('2d'), parameters);
 }
 
 function generateBackgroundColors(count) {
