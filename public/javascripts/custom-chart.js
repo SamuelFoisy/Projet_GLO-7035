@@ -2,128 +2,94 @@ function generateChart(selector, parameters) {
     return new Chart($(selector).get(0).getContext('2d'), parameters);
 }
 
-let averagePricePieChart = generateChart('#averagePrice', {
-    type: 'pie',
-    data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-            label: 'Prix',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            text: 'Prix moyens',
-            fontSize: 22,
-            fontColor: '#000'
-        },
-        legend: {
-            display: true,
-            position: 'bottom'
-        }
-    }
-});
+function generateCustomBarChart(selector, title, labels, values, showLegend = false) {
+    generateCustomChart('bar', selector, title, labels, values, showLegend);
+}
 
+function generateCustomPieChart(selector, title, labels, values, showLegend = true) {
+    generateCustomChart('pie', selector, title, labels, values, showLegend);
+}
 
-let houseTypeCountPieChart = generateChart('#houseTypeCount', {
-    type: 'bar',
-    data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-            label: 'Nombre de maisons',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            text: 'Décompte par type de propriété',
-            fontSize: 22,
-            fontColor: '#000'
-        },
-        legend: {
-            display: true,
-            position: 'bottom'
-        }
-    }
-});
-
-
-function generatePieChart(selector, labels, options) {
+function generateCustomChart(type, selector, title, labels, values, showLegend = true) {
     generateChart(selector, {
-        type: 'pie',
+        type: type,
         data: {
             labels: labels,
             datasets: [{
-                label: 'Prix',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
+                data: values,
+                backgroundColor: generateBackgroundColors(values.length),
+                borderColor: generateBorderColors(values.length),
                 borderWidth: 1
             }]
         },
         options: {
             title: {
                 display: true,
-                text: 'Prix moyens',
+                text: title,
                 fontSize: 22,
                 fontColor: '#000'
             },
             legend: {
-                display: true,
+                display: showLegend,
                 position: 'bottom'
             }
         }
     });
+}
+
+function generateBackgroundColors(count) {
+    const AVAILABLE_BACKGROUND_COLORS = [
+        'rgba(58, 222, 6, 0.3)',
+        'rgba(54, 162, 235, 0.3)',
+        'rgba(245, 100, 69, 0.3)',
+        'rgba(240, 220, 3, 0.3)',
+        'rgba(153, 102, 255, 0.3)',
+        'rgba(0, 160, 73, 0.3)',
+        'rgba(255, 159, 64, 0.3)',
+        'rgba(38, 116, 169, 0.3)',
+        'rgba(220, 69, 180, 0.3)',
+        'rgba(119, 247, 224, 0.3)',
+        'rgba(255, 90, 120, 0.3)',
+        'rgba(86, 56, 137, 0.3)'];
+
+    let colors = AVAILABLE_BACKGROUND_COLORS;
+
+    for (let concatCounts = Math.ceil(count / AVAILABLE_BACKGROUND_COLORS.length) - 1; concatCounts > 0; concatCounts--) {
+        colors = colors.concat(AVAILABLE_BACKGROUND_COLORS);
+    }
+
+    return colors;
+}
+
+function generateBorderColors(count) {
+    const AVAILABLE_BORDER_COLORS = [
+        'rgba(58, 222, 6, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(245, 100, 69, 1)',
+        'rgba(240, 220, 3, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(0, 160, 73, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(38, 116, 169, 1)',
+        'rgba(220, 69, 180, 1)',
+        'rgba(119, 247, 224, 1)',
+        'rgba(255, 90, 120, 1)',
+        'rgba(86, 56, 137, 1)'];
+
+    let borderColors = AVAILABLE_BORDER_COLORS;
+
+    console.log('count', count);
+    console.log('borderColors.length', borderColors.length);
+    console.log('concatCounts', Math.ceil(count / borderColors.length) - 1);
+    console.log('borderColors', borderColors);
+
+    for (let concatCounts = Math.ceil(count / borderColors.length) - 1; concatCounts > 0; concatCounts--) {
+        console.log('concat');
+        borderColors = borderColors.concat(AVAILABLE_BORDER_COLORS);
+        console.log('borderColors', borderColors);
+    }
+
+    return borderColors;
 }
 
 /**

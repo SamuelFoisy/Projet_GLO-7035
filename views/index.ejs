@@ -275,6 +275,14 @@
     function initMap() {
         initializeMapQuebec(document.getElementById('map'));
     }
+
+    generateCustomPieChart('#averagePrice', 'Exemple de PieChart',
+        ['Un', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six', 'Sept', 'Huit', 'Neuf', 'Dix', 'Onze', 'Douze', 'Treize', 'Quatorze', 'Quinze'],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+
+    generateCustomBarChart('#houseTypeCount', 'Exemple de BarChart',
+        ['Un', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six', 'Sept', 'Huit', 'Neuf', 'Dix', 'Onze', 'Douze', 'Treize', 'Quatorze', 'Quinze'],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 </script>
 </body>
 </html>
