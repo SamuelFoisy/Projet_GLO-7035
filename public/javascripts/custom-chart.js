@@ -97,6 +97,8 @@ function generateBorderColors(count) {
  Title
  Type
  Liste de libellés avec valeurs
+
+ Facultatif:
  Indicateur afficher légende
  Indicateur afficher tooltips
 
