@@ -6,6 +6,9 @@ router.get('/', function (req, res, next) {
 
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
+    let distance = parseFloat(req.query.distance)*1000;
+    let min = parseInt(req.query.min);
+    let max = parseInt(req.query.max);
 
     var url = 'mongodb://localhost:27017/duproprio'
 
@@ -18,10 +21,15 @@ router.get('/', function (req, res, next) {
                         type: "Point",
                         coordinates:[lat, long]
                     },
-                    $maxDistance:10000,
+                    $maxDistance:distance,
                 }
             },
+            $and:[
+                {price:{$gte:min}},
+                {price:{$lte:max}}
+            ]
         };
+
         db.collection("listing_properties").find(query).toArray(function(err, result) {
             if (err) throw err;
 
