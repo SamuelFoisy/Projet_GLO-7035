@@ -25,6 +25,14 @@ var updatePieCharts = function(){
 
     $.get(query , function (data, status) {
         console.log(data);
+        let label = []
+        let values = []
+        data.forEach(function(index, value, a){
+            label.push(index['_id']);
+            values.push(index['total_value']);
+        })
+
+        generateCustomPieChart('#averagePrice', 'Exemple de PieChart',label,values)
     });
 
 }

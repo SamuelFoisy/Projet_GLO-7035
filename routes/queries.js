@@ -30,6 +30,7 @@ router.get('/', function (req, res, next) {
             ]
         };
 
+
         db.collection("listing_properties").find(query).toArray(function(err, result) {
             if (err) throw err;
 
@@ -88,14 +89,15 @@ router.get('/piechart-by-external', function (req, res, next) {
             }
         },
             {$unwind: "$external_facing"},
-            {$group: {_id: "$external_facing", total_value: {$sum: "$price"}, house_count:{$sum: 1}}}
-        ]
+            {$group: {_id: "$external_facing", total_value: {$sum: "$price"}, house_count:{$sum: 1}}},
+            {$sort:{_id:1}}
 
-
+            ]
 
 
         db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
             if (err) throw err;
+
             res.json(result);
             db.close();
         })
