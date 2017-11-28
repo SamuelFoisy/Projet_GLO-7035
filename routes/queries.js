@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 let mongoClient = require('mongodb').MongoClient
+module.exports = router;
+
 
 router.get('/', function (req, res, next) {
 
@@ -53,10 +55,6 @@ router.get('/', function (req, res, next) {
 });
 
 
-
-
-module.exports = router;
-
 router.get('/piechart-by-external', function (req, res, next) {
 
 
@@ -92,7 +90,69 @@ router.get('/piechart-by-external', function (req, res, next) {
             {$group: {_id: "$external_facing", total_value: {$sum: "$price"}, house_count:{$sum: 1}}},
             {$sort:{_id:1}}
 
-            ]
+        ]
+
+
+        db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
+            if (err) throw err;
+
+            res.json(result);
+            db.close();
+        })
+    })
+})
+
+
+
+
+router.get('/bar-chart-by-price', function (req, res, next) {
+
+
+    let lat = parseFloat(req.query.lat);
+    let long = parseFloat(req.query.long);
+    let distance = parseFloat(req.query.distance) * 1000;
+    let min = parseInt(req.query.min);
+    let max = parseInt(req.query.max);
+
+    var url = 'mongodb://localhost:27017/duproprio';
+
+    let boundaries = []
+    let boundaryStep = 50000;
+    let defaultValue = "";
+    for(var i=0;i<=20;i++){
+        boundaries.push(i*boundaryStep)
+        defaultValue = String(i*boundaryStep).concat(" +")
+    }
+
+    console.log(boundaries);
+    mongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+
+
+        var aggregate_pipeline = [{
+            $geoNear: {
+                distanceField: "coordinates",
+                spherical: true,
+                near: {
+                    type: "Point",
+                    coordinates: [lat, long]
+                },
+                maxDistance: distance,
+                query: {
+                    $and: [
+                        {price: {$gte: min}},
+                        {price: {$lte: max}}
+                    ]
+                }
+            }
+        },
+            {$bucket: {
+                groupBy:"$price",
+                boundaries:boundaries,
+                default:defaultValue
+            }}
+
+        ]
 
 
         db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {

@@ -32,8 +32,27 @@ var updatePieCharts = function(){
             values.push(index['total_value']);
         })
 
-        generateCustomPieChart('#averagePrice', 'Exemple de PieChart',label,values)
+        generateCustomPieChart('#averagePrice', 'Distribution ponderee du materiel de construction de la facade exterieure',label,values)
     });
+
+
+
+    var query = "/queries/bar-chart-by-price/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
+
+    $.get(query , function (data, status) {
+        console.log(data);
+        let label = []
+        let values = []
+        data.forEach(function(index, value, a){
+            label.push(index['_id']);
+            values.push(index['count']);
+        })
+        generateCustomBarChart('#houseTypeCount', 'Distribution des valeurs de maison',label,values)
+
+    });
+
+
+
 
 }
 
