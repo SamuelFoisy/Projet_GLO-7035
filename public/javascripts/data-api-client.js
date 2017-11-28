@@ -23,12 +23,12 @@ var updateHouses = function(){
     var query = "/queries/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
     $.get(query , function (data, status) {
-        console.log(data);
 
-        // data.forEach(function (value, index, a) {
-        //
-        //
-        // });
+        let housePrice = data.averageHousePrice
+        housePrice = parseFloat(Math.round(housePrice)).toLocaleString("fr-CA");
+        $("#average-sale-price").text(String(housePrice).concat(" $"));
+
     });
+
 };
 
