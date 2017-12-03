@@ -1,4 +1,4 @@
-var map, searchCenterPoint, searchRangeCircle, marker;
+let map, searchCenterPoint, searchRangeCircle, marker;
 
 function initializeMapQuebec(element) {
     const POSITION_ULAVAL = new google.maps.LatLng(46.779249, -71.269680);

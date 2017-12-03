@@ -1,83 +1,78 @@
-
-$(".form-control").change(function() {
+$(".form-control").change(function () {
     updateHouses();
     updatePieCharts();
 });
 
 
-var updatePieCharts = function(){
+let updatePieCharts = function () {
 
-    var lat = map.data.map.center.lat();
-    var long = map.data.map.center.lng();
-    var distance = $("#search-range").val();
-    var minmaxString = $("#price-range-filter").attr("data-value");
+    let lat = map.data.map.center.lat();
+    let long = map.data.map.center.lng();
+    let distance = $("#search-range").val();
+    let minmaxString = $("#price-range-filter").attr("data-value");
 
-    var minmax = minmaxString.split(",");
+    let minmax = minmaxString.split(",");
 
-    var queryLat = "lat=".concat(lat);
-    var queryLong = "&long=".concat(long);
-    var queryDistance = "&distance=".concat(distance);
-    var queryMin = "&min=".concat(minmax[0]);
-    var queryMax = "&max=".concat(minmax[1]);
+    let queryLat = "lat=".concat(lat);
+    let queryLong = "&long=".concat(long);
+    let queryDistance = "&distance=".concat(distance);
+    let queryMin = "&min=".concat(minmax[0]);
+    let queryMax = "&max=".concat(minmax[1]);
 
 
-    var query = "/queries/piechart-by-external/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
+    let pieChartQuery = "/queries/piechart-by-external/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
-    $.get(query , function (data, status) {
+    $.get(pieChartQuery, function (data, status) {
         console.log(data);
-        let label = []
-        let values = []
-        data.forEach(function(index, value, a){
+        let label = [];
+        let values = [];
+        data.forEach(function (index, value, a) {
             label.push(index['_id']);
             values.push(index['total_value']);
-        })
+        });
 
-        generateCustomPieChart('#averagePrice', 'Distribution ponderee du materiel de construction de la facade exterieure',label,values)
+        generateCustomPieChart('#averagePrice', 'Distribution ponderee du materiel de construction de la facade exterieure', label, values)
     });
 
 
+    let barChartQuery = "/queries/bar-chart-by-price/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
-    var query = "/queries/bar-chart-by-price/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
-
-    $.get(query , function (data, status) {
+    $.get(barChartQuery, function (data, status) {
         console.log(data);
-        let label = []
-        let values = []
-        data.forEach(function(index, value, a){
+        let label = [];
+        let values = [];
+        data.forEach(function (index, value, a) {
             label.push(index['_id']);
             values.push(index['count']);
-        })
-        generateCustomBarChart('#houseTypeCount', 'Distribution des valeurs de maison',label,values)
+        });
+        generateCustomBarChart('#houseTypeCount', 'Distribution des valeurs de maison', label, values)
 
     });
 
 
+};
 
 
-}
+let updateHouses = function () {
+    let lat = map.data.map.center.lat();
+    let long = map.data.map.center.lng();
+    let distance = $("#search-range").val();
+    let minmaxString = $("#price-range-filter").attr("data-value");
 
 
-var updateHouses = function(){
-    var lat = map.data.map.center.lat();
-    var long = map.data.map.center.lng();
-    var distance = $("#search-range").val();
-    var minmaxString = $("#price-range-filter").attr("data-value");
+    let minmax = minmaxString.split(",");
 
+    let queryLat = "lat=".concat(lat);
+    let queryLong = "&long=".concat(long);
+    let queryDistance = "&distance=".concat(distance);
+    let queryMin = "&min=".concat(minmax[0]);
+    let queryMax = "&max=".concat(minmax[1]);
 
+    let query = "/queries/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
-    var minmax = minmaxString.split(",");
+    $.get(query, function (data, status) {
 
-    var queryLat = "lat=".concat(lat);
-    var queryLong = "&long=".concat(long);
-    var queryDistance = "&distance=".concat(distance);
-    var queryMin = "&min=".concat(minmax[0]);
-    var queryMax = "&max=".concat(minmax[1]);
-
-    var query = "/queries/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
-
-    $.get(query , function (data, status) {
-
-        let housePrice = data.averageHousePrice
+        let housePrice = data.averageHousePrice;
         housePrice = parseFloat(Math.round(housePrice)).toLocaleString("fr-CA");
         $("#average-sale-price").text(String(housePrice).concat(" $"));
 

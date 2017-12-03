@@ -1,3 +1,5 @@
+let chartMap = {};
+
 function generateCustomBarChart(selector, title, labels, values, showLegend = false) {
     generateCustomChart('bar', selector, title, labels, values, showLegend);
 }
@@ -34,7 +36,12 @@ function generateCustomChart(type, selector, title, labels, values, showLegend =
 }
 
 function generateChart(selector, parameters) {
-    return new Chart($(selector).get(0).getContext('2d'), parameters);
+    if (chartMap[selector]) {
+        chartMap[selector].destroy();
+    }
+
+    chartMap[selector] = new Chart($(selector).get(0).getContext('2d'), parameters);
+    return chartMap[selector];
 }
 
 function generateBackgroundColors(count) {
