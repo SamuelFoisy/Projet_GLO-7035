@@ -88,7 +88,7 @@
                        data-slider-min="5" data-slider-max="100">
             </div>
             <label for="average-sale-price">Moyenne des prix de vente:</label>
-            <div type="text" id="average-sale-price"></div>
+            <input type="text" id="average-sale-price"/>
         </div>
         <!-- /.col-md-5 -->
         <div class="col-md-7">
@@ -180,7 +180,7 @@
                                         <option>5+</option>
                                     </select>
                                 </div>
-                                <button type="button" ref="#" class="btn btn-primary btn-lg pull-right">Rafraîchir
+                                <button type="button" class="btn btn-primary btn-lg pull-right">Rafraîchir
                                 </button>
                             </form>
                         </div>
@@ -238,7 +238,6 @@
         async defer></script>
 
 
-
 <!-- Custom ChartJS JavaScript -->
 <script src="/javascripts/data-api-client.js"></script>
 
@@ -264,15 +263,6 @@
     function initMap() {
         initializeMapQuebec(document.getElementById('map'));
     }
-
-    // Charts
-    generateCustomPieChart('#averagePrice', 'Exemple de PieChart',
-        ['Un', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six', 'Sept', 'Huit', 'Neuf', 'Dix', 'Onze', 'Douze', 'Treize', 'Quatorze', 'Quinze'],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-
-    generateCustomBarChart('#houseTypeCount', 'Exemple de BarChart',
-        ['Un', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six', 'Sept', 'Huit', 'Neuf', 'Dix', 'Onze', 'Douze', 'Treize', 'Quatorze', 'Quinze'],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 </script>
 </body>
 </html>

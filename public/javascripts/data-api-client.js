@@ -1,8 +1,15 @@
 $(".form-control").change(function () {
-    updateHouses();
-    updatePieCharts();
+    updateAll();
 });
 
+$(document).ready(function () {
+    updateAll();
+});
+
+let updateAll = function () {
+    updateHouses();
+    updatePieCharts();
+};
 
 let updatePieCharts = function () {
 
