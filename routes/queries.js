@@ -159,3 +159,62 @@ router.get('/bar-chart-by-price', function (req, res, next) {
         })
     })
 });
+
+router.get('/top-houses', function (req, res, next) {
+    let lat = parseFloat(req.query.lat);
+    let long = parseFloat(req.query.long);
+    let distance = parseFloat(req.query.distance) * 1000;
+    let min = parseInt(req.query.min);
+    let max = parseInt(req.query.max);
+
+    let boundaries = [];
+    let boundaryStep = 50000;
+    let defaultValue = "";
+    for (let i = 0; i <= 20; i++) {
+        boundaries.push(i * boundaryStep);
+        defaultValue = String(i * boundaryStep).concat(" +")
+    }
+
+    mongoClient.connect(mongoUrl, function (err, db) {
+        if (err) throw err;
+
+
+        let aggregate_pipeline = [{
+            $geoNear: {
+                distanceField: "coordinates",
+                spherical: true,
+                near: {
+                    type: "Point",
+                    coordinates: [lat, long]
+                },
+                maxDistance: distance,
+                query: {
+                    $and: [
+                        {price: {$gte: min}},
+                        {price: {$lte: max}}
+                    ]
+                }
+            }
+        },
+            {
+                $project: {
+                    "_id": 1,
+                    "construction_year": 1,
+                    "coordinates": 1,
+                    "postal_code": 1,
+                    "external_facing": 1,
+                    "price": 1,
+                    "facade_image": 1,
+                    "listing_id": 1
+                }
+            }];
+
+
+        db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
+            if (err) throw err;
+
+            res.json(result);
+            db.close();
+        })
+    })
+});
