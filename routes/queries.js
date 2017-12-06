@@ -167,14 +167,6 @@ router.get('/top-houses', function (req, res, next) {
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
 
-    let boundaries = [];
-    let boundaryStep = 50000;
-    let defaultValue = "";
-    for (let i = 0; i <= 20; i++) {
-        boundaries.push(i * boundaryStep);
-        defaultValue = String(i * boundaryStep).concat(" +")
-    }
-
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
 
@@ -195,7 +187,7 @@ router.get('/top-houses', function (req, res, next) {
                     ]
                 }
             }
-        },
+        },{$sort: { coordinates: 1}},
             {
                 $project: {
                     "_id": 1,
@@ -207,7 +199,9 @@ router.get('/top-houses', function (req, res, next) {
                     "facade_image": 1,
                     "listing_id": 1
                 }
-            }];
+            }
+
+        ];
 
 
         db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
