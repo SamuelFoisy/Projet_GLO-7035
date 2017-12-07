@@ -47,5 +47,8 @@
 
 .warning {
     background-color: #c9302c !important;
+}
 
+.tooltip {
+    z-index: 1029;
 }
