@@ -33,3 +33,19 @@
 .select2-dropdown {
     z-index: 1080;
 }
+
+/* MODAL */
+.imageLink {
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: 60%;
+    }
+}
+
+.warning {
+    background-color: #c9302c !important;
+
+}
