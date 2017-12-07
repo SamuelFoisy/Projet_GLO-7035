@@ -35,9 +35,15 @@ let updatePieCharts = function () {
     $.get(pieChartQuery, function (data, status) {
         let label = [];
         let values = [];
+        let total_value = 0;
+        data.forEach(function (index, value, a) {
+            total_value += index['total_value'];
+        });
+
+
         data.forEach(function (index, value, a) {
             label.push(index['_id']);
-            values.push(index['total_value']);
+            values.push(Math.round(index['total_value']/total_value*1000)/100);
         });
 
         generateCustomPieChart('#averagePrice', 'Distribution ponderee du materiel de construction de la facade exterieure', label, values)
@@ -106,10 +112,9 @@ let updateTable = function () {
     let queryMax = "&max=".concat(minmax[1]);
 
     let query = "/queries/top-houses/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
-
-
-
-    resetTable();
+    if (topHouseTable != undefined) {
+        topHouseTable.destroy();
+    }
 
     $.get(query, function (data, status, table ) {
         let current_id = null;
@@ -148,9 +153,4 @@ let updateTable = function () {
     });
 
 
-    function resetTable() {
-        if (topHouseTable != undefined) {
-            topHouseTable.destroy();
-        }
-    }
 };

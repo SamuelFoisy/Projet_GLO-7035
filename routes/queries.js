@@ -4,7 +4,7 @@ let mongoClient = require('mongodb').MongoClient;
 let ObjectID = require('mongodb').ObjectID;
 module.exports = router;
 
-const mongoUrl = 'mongodb://localhost:27017/duproprio';
+const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@localhost:27017/duproprio';
 
 router.get('/', function (req, res, next) {
 
@@ -100,6 +100,54 @@ router.get('/piechart-by-external', function (req, res, next) {
         })
     })
 });
+
+
+router.get('/piechart-by-heating', function (req, res, next) {
+
+
+    let lat = parseFloat(req.query.lat);
+    let long = parseFloat(req.query.long);
+    let distance = parseFloat(req.query.distance) * 1000;
+    let min = parseInt(req.query.min);
+    let max = parseInt(req.query.max);
+
+    mongoClient.connect(mongoUrl, function (err, db) {
+        if (err) throw err;
+
+
+        let aggregate_pipeline = [{
+            $geoNear: {
+                distanceField: "coordinates",
+                spherical: true,
+                near: {
+                    type: "Point",
+                    coordinates: [lat, long]
+                },
+                maxDistance: distance,
+                query: {
+                    $and: [
+                        {price: {$gte: min}},
+                        {price: {$lte: max}}
+                    ]
+                }
+            }
+        },
+            {$unwind: "$heating_source"},
+            {$group: {_id: "$heating_source", total_value: {$sum: "$price"}, house_count: {$sum: 1}}},
+            {$sort: {_id: 1}}
+
+        ];
+
+
+        db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
+            if (err) throw err;
+
+            res.json(result);
+            db.close();
+        })
+    })
+});
+
 
 
 router.get('/bar-chart-by-price', function (req, res, next) {
