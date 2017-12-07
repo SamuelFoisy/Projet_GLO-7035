@@ -44,7 +44,7 @@ let updatePieCharts = function () {
 
         data.forEach(function (index, value, a) {
             label.push(index['_id']);
-            values.push(Math.round(index['total_value']/total_value*1000)/100);
+            values.push(Math.round(index['total_value'] / total_value * 1000) / 100);
         });
 
         generateCustomPieChart('#averagePrice', 'Distribution pondérée du matériel de construction de la façade extérieure', label, values)
@@ -127,6 +127,7 @@ let updateTable = function () {
                 {data: "price", title: "Prix"},
                 {data: "construction_year", title: "Construit le"},
                 {data: "postal_code", title: "Code Postal"},
+                {data: "housing_type", "defaultContent": "", title: "Type de propriété"},
                 {data: "external_facing", title: "Matériaux"},
                 {
                     data: "facade_image", title: "Images", render: function (data, type, row) {

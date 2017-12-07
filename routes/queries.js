@@ -6,7 +6,7 @@ module.exports = router;
 
 
 //mongodb://<dbuser>:<dbpassword>@ds133796.mlab.com:33796/duproprio
-// const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@localhost:27017/duproprio';
+//const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@localhost:27017/duproprio';
 const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@ds133796.mlab.com:33796/duproprio';
 
 router.get('/', function (req, res, next) {
@@ -145,7 +145,6 @@ router.get('/piechart-by-heating', function (req, res, next) {
 });
 
 
-
 router.get('/bar-chart-by-price', function (req, res, next) {
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
@@ -232,6 +231,7 @@ router.get('/top-houses', function (req, res, next) {
                     "construction_year": 1,
                     "coordinates": 1,
                     "postal_code": 1,
+                    "housing_type": 1,
                     "external_facing": 1,
                     "price": 1,
                     "facade_image": 1,
