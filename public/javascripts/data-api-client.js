@@ -1,21 +1,23 @@
 var topHouseTable;
+var tableRefreshBusy = false;
 
 $(".form-control").change(function () {
-    updateAll();
+    if (!tableRefreshBusy) {
+        updateAllCharts();
+    }
 });
 
 $(document).ready(function () {
-    updateAll();
+    updateAllCharts();
 });
 
-let updateAll = function () {
+let updateAllCharts = function () {
     updateHouses();
     updatePieCharts();
     updateTable();
 };
 
 let updatePieCharts = function () {
-
     let lat = map.data.map.center.lat();
     let long = map.data.map.center.lng();
     let distance = $("#search-range").val();
@@ -29,7 +31,6 @@ let updatePieCharts = function () {
     let queryMin = "&min=".concat(minmax[0]);
     let queryMax = "&max=".concat(minmax[1]);
 
-
     let pieChartQuery = "/queries/piechart-by-external/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
     $.get(pieChartQuery, function (data, status) {
@@ -37,12 +38,12 @@ let updatePieCharts = function () {
         let values = [];
         data.forEach(function (index, value, a) {
             label.push(index['_id']);
+            //values.push(index['total_value']);
             values.push(index['total_value']);
         });
 
         generateCustomPieChart('#averagePrice', 'Distribution pondérée du matériel de construction de la façade extérieure', label, values)
     });
-
 
     let barChartQuery = "/queries/bar-chart-by-price/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
@@ -57,7 +58,6 @@ let updatePieCharts = function () {
 
     });
 
-
 };
 
 
@@ -66,7 +66,6 @@ let updateHouses = function () {
     let long = map.data.map.center.lng();
     let distance = $("#search-range").val();
     let minmaxString = $("#price-range-filter").attr("data-value");
-
 
     let minmax = minmaxString.split(",");
 
@@ -79,13 +78,10 @@ let updateHouses = function () {
     let query = "/queries/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
     $.get(query, function (data, status) {
-
         let housePrice = data.averageHousePrice;
         housePrice = parseFloat(Math.round(housePrice)).toLocaleString("fr-CA");
         $("#average-sale-price").text(String(housePrice).concat(" $"));
-
     });
-
 };
 
 
@@ -94,7 +90,6 @@ let updateTable = function () {
     let long = map.data.map.center.lng();
     let distance = $("#search-range").val();
     let minmaxString = $("#price-range-filter").attr("data-value");
-
 
     let minmax = minmaxString.split(",");
 
@@ -106,12 +101,12 @@ let updateTable = function () {
 
     let query = "/queries/top-houses/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
-
     resetTable();
+
+    tableRefreshBusy = true;
 
     $.get(query, function (data, status, table) {
         let current_id = null;
-
         topHouseTable = $('#topResults').DataTable({
             data: data,
             bsort: false,
@@ -145,7 +140,8 @@ let updateTable = function () {
                     }
                 }
             ]
-        })
+        });
+        tableRefreshBusy = false;
 
     });
 

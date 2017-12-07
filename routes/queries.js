@@ -7,7 +7,6 @@ module.exports = router;
 const mongoUrl = 'mongodb://localhost:27017/duproprio';
 
 router.get('/', function (req, res, next) {
-
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
@@ -32,7 +31,6 @@ router.get('/', function (req, res, next) {
             ]
         };
 
-
         db.collection("listing_properties").find(query).toArray(function (err, result) {
             if (err) throw err;
 
@@ -51,13 +49,10 @@ router.get('/', function (req, res, next) {
         });
     });
 
-
 });
 
 
 router.get('/piechart-by-external', function (req, res, next) {
-
-
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
@@ -66,7 +61,6 @@ router.get('/piechart-by-external', function (req, res, next) {
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
-
 
         let aggregate_pipeline = [{
             $geoNear: {
@@ -91,7 +85,6 @@ router.get('/piechart-by-external', function (req, res, next) {
 
         ];
 
-
         db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
             if (err) throw err;
 
@@ -103,8 +96,6 @@ router.get('/piechart-by-external', function (req, res, next) {
 
 
 router.get('/bar-chart-by-price', function (req, res, next) {
-
-
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
@@ -120,7 +111,6 @@ router.get('/bar-chart-by-price', function (req, res, next) {
     }
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
-
 
         let aggregate_pipeline = [{
             $geoNear: {
@@ -149,7 +139,6 @@ router.get('/bar-chart-by-price', function (req, res, next) {
 
         ];
 
-
         db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
             if (err) throw err;
 
@@ -169,7 +158,6 @@ router.get('/top-houses', function (req, res, next) {
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
 
-
         let aggregate_pipeline = [{
             $geoNear: {
                 distanceField: "coordinates",
@@ -186,7 +174,7 @@ router.get('/top-houses', function (req, res, next) {
                     ]
                 }
             }
-        },{$sort: { coordinates: 1}},
+        }, {$sort: {coordinates: 1}},
             {
                 $project: {
                     "_id": 1,
@@ -201,7 +189,6 @@ router.get('/top-houses', function (req, res, next) {
             }
 
         ];
-
 
         db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
             if (err) throw err;
@@ -220,16 +207,16 @@ router.get('/delete-image', function (req, res, next) {
         if (err) throw err;
         console.log("okay");
         let houseId = ObjectID(house);
-        let query = {"_id":houseId};
-        let update = {$pull:{"facade_image":imageToRemove}};
+        let query = {"_id": houseId};
+        let update = {$pull: {"facade_image": imageToRemove}};
         console.log(query);
         console.log(update);
-        db.collection("listing_properties").updateOne(query,update).then(function(){
-            res.json({'ok':1});
+        db.collection("listing_properties").updateOne(query, update).then(function () {
+            res.json({'ok': 1});
             window.close();
             db.close()
             }
         );
     })
 
-})
+});
