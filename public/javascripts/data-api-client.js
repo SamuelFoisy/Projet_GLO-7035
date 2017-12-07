@@ -40,7 +40,7 @@ let updatePieCharts = function () {
             values.push(index['total_value']);
         });
 
-        generateCustomPieChart('#averagePrice', 'Distribution ponderee du materiel de construction de la facade exterieure', label, values)
+        generateCustomPieChart('#averagePrice', 'Distribution pondérée du matériel de construction de la façade extérieure', label, values)
     });
 
 
@@ -89,7 +89,6 @@ let updateHouses = function () {
 };
 
 
-
 let updateTable = function () {
     let lat = map.data.map.center.lat();
     let long = map.data.map.center.lng();
@@ -108,10 +107,9 @@ let updateTable = function () {
     let query = "/queries/top-houses/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
 
-
     resetTable();
 
-    $.get(query, function (data, status, table ) {
+    $.get(query, function (data, status, table) {
         let current_id = null;
 
         topHouseTable = $('#topResults').DataTable({
@@ -119,9 +117,9 @@ let updateTable = function () {
             bsort: false,
             columns: [
                 {
-                    data: "_id", "visible": false, "defaultContent":"", render: function(data, type, row){
+                    data: "_id", "visible": false, "defaultContent": "", render: function (data, type, row) {
                         current_id = data;
-                }
+                    }
 
                 },
                 {data: "price", title: "Prix"},
@@ -129,27 +127,29 @@ let updateTable = function () {
                 {data: "postal_code", title: "Code Postal"},
                 {data: "external_facing", title: "Matériaux"},
                 {
-                    data: "facade_image",   title: "Images", render: function (data, type, row) {
-                    let result = "";
-                    data.forEach(function (url) {
-                        result += '<a class=warning target="_blank" href="/queries/delete-image/?image='+url+'&house='+current_id+'">x</a> '
-                        result += '<a target="_blank" href="https://photos.duproprio.com/'+url+'">image</a><br/>'
-                    });
-                    return result;
-                }
+                    data: "facade_image", title: "Images", render: function (data, type, row) {
+                        let result = "";
+                        data.forEach(function (url) {
+                            result += `<a href="javascript:openPopupImage('https://photos.duproprio.com/${url}');" data-url="https://photos.duproprio.com/${url}">image</a>`;
+                            result += '&nbsp;';
+                            result += '<a class=warning target="_blank" href="/queries/delete-image/?image=' + url + '&house=' + current_id + '" onclick="return confirm(\'Voulez-vous réellement supprimer cette image?\');">x</a>';
+                            result += '<br/>';
+                        });
+                        return result;
+                    }
                 },
                 {
                     data: "listing_id", title: "URL", render: function (data, type, row) {
-                    return `<a target="_blank" href="${data}">lien</a>`;
-                }}
+                        return `<a target="_blank" href="${data}">lien</a>`;
+                    }
+                }
             ]
         })
 
     });
 
-
     function resetTable() {
-        if (topHouseTable != undefined) {
+        if (topHouseTable !== undefined) {
             topHouseTable.destroy();
         }
     }
