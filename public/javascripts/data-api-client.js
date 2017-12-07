@@ -104,25 +104,33 @@ let updateTable = function () {
     let queryMax = "&max=".concat(minmax[1]);
 
     let query = "/queries/top-houses/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
-    let table;
+    let table = $('#topResults').value;
+    console.log(table)
+    // table.destroy();
 
-    $.get(query, function (data, status) {
-        console.log("INFOS", data);
+    $.get(query, function (data, status, table ) {
+        let current_id = null;
 
         table = $('#topResults').DataTable({
             data: data,
             bsort: false,
             columns: [
+                {
+                    data: "_id", "visible": false, "defaultContent":"", render: function(data, type, row){
+                        current_id = data;
+                }
+
+                },
                 {data: "price", title: "Prix"},
                 {data: "construction_year", title: "Construit le"},
                 {data: "postal_code", title: "Code Postal"},
                 {data: "external_facing", title: "Matériaux"},
                 {
-                    data: "facade_image", title: "Images", render: function (data, type, row) {
+                    data: "facade_image",   title: "Images", render: function (data, type, row) {
                     let result = "";
-                    console.log(data);
                     data.forEach(function (url) {
-                        result += `<a target="_blank" href="https://photos.duproprio.com/${url}">image</a><br/>`
+                        result += '<a class=warning target="_blank" href="/queries/delete-image/?image='+url+'&house='+current_id+'">x</a> '
+                        result += '<a target="_blank" href="https://photos.duproprio.com/'+url+'">image</a><br/>'
                     });
                     return result;
                 }
@@ -130,12 +138,12 @@ let updateTable = function () {
                 {
                     data: "listing_id", title: "URL", render: function (data, type, row) {
                     return `<a target="_blank" href="${data}">lien</a>`;
-                }
-                },
+                }}
             ]
         })
-        
-        table.destroy();
+
     });
+
+
 
 };

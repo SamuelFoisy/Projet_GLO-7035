@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 let mongoClient = require('mongodb').MongoClient;
+let ObjectID = require('mongodb').ObjectID;
 module.exports = router;
 
 const mongoUrl = 'mongodb://localhost:27017/duproprio';
@@ -210,3 +211,25 @@ router.get('/top-houses', function (req, res, next) {
         })
     })
 });
+
+router.get('/delete-image', function (req, res, next) {
+    let imageToRemove = String(req.query.image);
+    let house = String(req.query.house);
+
+    mongoClient.connect(mongoUrl, function (err, db) {
+        if (err) throw err;
+        console.log("okay");
+        let houseId = ObjectID(house);
+        let query = {"_id":houseId};
+        let update = {$pull:{"facade_image":imageToRemove}};
+        console.log(query);
+        console.log(update);
+        db.collection("listing_properties").updateOne(query,update).then(function(){
+            res.json({'ok':1});
+            window.close();
+            db.close()
+            }
+        );
+    })
+
+})
