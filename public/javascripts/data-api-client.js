@@ -1,3 +1,5 @@
+var topHouseTable;
+
 $(".form-control").change(function () {
     updateAll();
 });
@@ -104,14 +106,15 @@ let updateTable = function () {
     let queryMax = "&max=".concat(minmax[1]);
 
     let query = "/queries/top-houses/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
-    let table = $('#topResults').value;
-    console.log(table)
-    // table.destroy();
+
+
+
+    resetTable();
 
     $.get(query, function (data, status, table ) {
         let current_id = null;
 
-        table = $('#topResults').DataTable({
+        topHouseTable = $('#topResults').DataTable({
             data: data,
             bsort: false,
             columns: [
@@ -145,5 +148,9 @@ let updateTable = function () {
     });
 
 
-
+    function resetTable() {
+        if (topHouseTable != undefined) {
+            topHouseTable.destroy();
+        }
+    }
 };
