@@ -9,7 +9,7 @@ module.exports = router;
 //const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@localhost:27017/duproprio';
 const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@ds133796.mlab.com:33796/duproprio';
 
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
@@ -55,7 +55,7 @@ router.get('/', function (req, res, next) {
 });
 
 
-router.get('/piechart-by-external', function (req, res, next) {
+router.get('/piechart-by-external', function (req, res) {
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
@@ -98,7 +98,7 @@ router.get('/piechart-by-external', function (req, res, next) {
 });
 
 
-router.get('/piechart-by-heating', function (req, res, next) {
+router.get('/piechart-by-heating', function (req, res) {
 
 
     let lat = parseFloat(req.query.lat);
@@ -145,7 +145,7 @@ router.get('/piechart-by-heating', function (req, res, next) {
 });
 
 
-router.get('/bar-chart-by-price', function (req, res, next) {
+router.get('/bar-chart-by-price', function (req, res) {
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
@@ -198,7 +198,7 @@ router.get('/bar-chart-by-price', function (req, res, next) {
     })
 });
 
-router.get('/top-houses', function (req, res, next) {
+router.get('/top-houses', function (req, res) {
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
@@ -250,7 +250,7 @@ router.get('/top-houses', function (req, res, next) {
     })
 });
 
-router.get('/delete-image', function (req, res, next) {
+router.post('/delete-image', function (req, res) {
     let imageToRemove = String(req.query.image);
     let house = String(req.query.house);
 

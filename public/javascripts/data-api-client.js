@@ -135,8 +135,7 @@ let updateTable = function () {
                         data.forEach(function (url) {
                             result += `<a href="javascript:openPopupImage('https://photos.duproprio.com/${url}');" data-url="https://photos.duproprio.com/${url}">image</a>`;
                             result += '&nbsp;';
-                            result += '<a target="_blank" class="badge warning" href="/queries/delete-image/?image=' + url + '&house=' + current_id + '" onclick="return confirm(\'Voulez-vous réellement supprimer cette image?\');">' +
-                                '<i class="fa fa-times"></i>' + '</a>';
+                            result += `<button class="badge warning" onclick="deleteImage('${url}', '${current_id}');">` + '<i class="fa fa-times"></i>' + '</button>';
                             result += '<br/>';
                         });
                         return result;
@@ -151,5 +150,33 @@ let updateTable = function () {
         });
         tableRefreshBusy = false;
 
+    });
+};
+
+let deleteImage = function (houseUrl, imageId) {
+    $.confirm({
+        title: 'Voulez-vous réellement supprimer cette image?',
+        type: 'red',
+        content: '',
+        closeIcon: true,
+        buttons: {
+            ok: {
+                text: "Oui",
+                btnClass: 'btn-danger',
+                keys: ['enter'],
+                action: function () {
+                    let postUrl = '/queries/delete-image/?image=' + houseUrl + '&house=' + imageId;
+
+                    $.post(postUrl, function (data) {
+                        updateTable();
+                    });
+                }
+            },
+            cancel: {
+                text: "Non",
+                action: function () {
+                }
+            }
+        }
     });
 };
