@@ -117,8 +117,6 @@ router.get('/bar-chart-by-price', function (req, res, next) {
         boundaries.push(i * boundaryStep);
         defaultValue = String(i * boundaryStep).concat(" +")
     }
-
-    console.log(boundaries);
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
 

@@ -31,7 +31,6 @@ let updatePieCharts = function () {
     let pieChartQuery = "/queries/piechart-by-external/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
     $.get(pieChartQuery, function (data, status) {
-        console.log("DATA", data);
         let label = [];
         let values = [];
         data.forEach(function (index, value, a) {
@@ -46,7 +45,6 @@ let updatePieCharts = function () {
     let barChartQuery = "/queries/bar-chart-by-price/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
 
     $.get(barChartQuery, function (data, status) {
-        console.log(data);
         let label = [];
         let values = [];
         data.forEach(function (index, value, a) {

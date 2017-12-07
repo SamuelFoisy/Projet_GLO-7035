@@ -85,15 +85,8 @@ function generateBorderColors(count) {
 
     let borderColors = AVAILABLE_BORDER_COLORS;
 
-    console.log('count', count);
-    console.log('borderColors.length', borderColors.length);
-    console.log('concatCounts', Math.ceil(count / borderColors.length) - 1);
-    console.log('borderColors', borderColors);
-
     for (let concatCounts = Math.ceil(count / borderColors.length) - 1; concatCounts > 0; concatCounts--) {
-        console.log('concat');
         borderColors = borderColors.concat(AVAILABLE_BORDER_COLORS);
-        console.log('borderColors', borderColors);
     }
 
     return borderColors;
