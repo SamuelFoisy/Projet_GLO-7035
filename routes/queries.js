@@ -5,9 +5,8 @@ let ObjectID = require('mongodb').ObjectID;
 module.exports = router;
 
 
-//mongodb://<dbuser>:<dbpassword>@ds133796.mlab.com:33796/duproprio
-const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@localhost:27017/duproprio';
-// const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@ds133796.mlab.com:33796/duproprio';
+// const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@localhost:27017/duproprio';
+const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@ds133796.mlab.com:33796/duproprio';
 
 router.get('/', function (req, res, next) {
     let lat = parseFloat(req.query.lat);
