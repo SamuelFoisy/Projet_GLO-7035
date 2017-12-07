@@ -44,3 +44,8 @@
         width: 60%;
     }
 }
+
+.warning {
+    background-color: #c9302c !important;
+
+}

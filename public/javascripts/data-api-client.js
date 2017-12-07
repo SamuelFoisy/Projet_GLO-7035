@@ -132,7 +132,8 @@ let updateTable = function () {
                         data.forEach(function (url) {
                             result += `<a href="javascript:openPopupImage('https://photos.duproprio.com/${url}');" data-url="https://photos.duproprio.com/${url}">image</a>`;
                             result += '&nbsp;';
-                            result += '<a class=warning target="_blank" href="/queries/delete-image/?image=' + url + '&house=' + current_id + '" onclick="return confirm(\'Voulez-vous réellement supprimer cette image?\');">x</a>';
+                            result += '<a target="_blank" class="badge warning" href="/queries/delete-image/?image=' + url + '&house=' + current_id + '" onclick="return confirm(\'Voulez-vous réellement supprimer cette image?\');">' +
+                                '<i class="fa fa-times"></i>' + '</a>';
                             result += '<br/>';
                         });
                         return result;
