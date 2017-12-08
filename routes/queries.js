@@ -12,6 +12,15 @@ router.get('/', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
+    let housingTypes;
+    if (req.query.housingTypes) {
+        housingTypes = req.query.housingTypes.split(':');
+    }
+
+    let externalFacing;
+    if (req.query.externalFacing) {
+        externalFacing = req.query.externalFacing.split(':');
+    }
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -27,7 +36,9 @@ router.get('/', function (req, res) {
             },
             $and: [
                 {price: {$gte: min}},
-                {price: {$lte: max}}
+                {price: {$lte: max}},
+                createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
+                createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
             ]
         };
 
@@ -58,6 +69,15 @@ router.get('/piechart-by-external', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
+    let housingTypes;
+    if (req.query.housingTypes) {
+        housingTypes = req.query.housingTypes.split(':');
+    }
+
+    let externalFacing;
+    if (req.query.externalFacing) {
+        externalFacing = req.query.externalFacing.split(':');
+    }
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -74,7 +94,9 @@ router.get('/piechart-by-external', function (req, res) {
                 query: {
                     $and: [
                         {price: {$gte: min}},
-                        {price: {$lte: max}}
+                        {price: {$lte: max}},
+                        createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
+                        createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
                     ]
                 }
             }
@@ -96,13 +118,20 @@ router.get('/piechart-by-external', function (req, res) {
 
 
 router.get('/piechart-by-heating', function (req, res) {
-
-
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
+    let housingTypes;
+    if (req.query.housingTypes) {
+        housingTypes = req.query.housingTypes.split(':');
+    }
+
+    let externalFacing;
+    if (req.query.externalFacing) {
+        externalFacing = req.query.externalFacing.split(':');
+    }
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -120,7 +149,9 @@ router.get('/piechart-by-heating', function (req, res) {
                 query: {
                     $and: [
                         {price: {$gte: min}},
-                        {price: {$lte: max}}
+                        {price: {$lte: max}},
+                        createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
+                        createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
                     ]
                 }
             }
@@ -148,6 +179,15 @@ router.get('/bar-chart-by-price', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
+    let housingTypes;
+    if (req.query.housingTypes) {
+        housingTypes = req.query.housingTypes.split(':');
+    }
+
+    let externalFacing;
+    if (req.query.externalFacing) {
+        externalFacing = req.query.externalFacing.split(':');
+    }
 
     let boundaries = [];
     let boundaryStep = 50000;
@@ -171,7 +211,9 @@ router.get('/bar-chart-by-price', function (req, res) {
                 query: {
                     $and: [
                         {price: {$gte: min}},
-                        {price: {$lte: max}}
+                        {price: {$lte: max}},
+                        createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
+                        createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
                     ]
                 }
             }
