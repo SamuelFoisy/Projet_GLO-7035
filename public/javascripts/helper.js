@@ -64,4 +64,4 @@ function SimpleLock() {
     self.isAvailable = function () {
         return !locked;
     };
-};
+}
