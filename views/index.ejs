@@ -19,6 +19,9 @@
     <!-- Core Select2 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet"/>
 
+    <!-- Core jQuery Confirm CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+
     <!-- Custom Theme CSS -->
     <link href="/stylesheets/theme.css" rel="stylesheet">
 
@@ -100,7 +103,6 @@
 
     <hr>
 
-    <!-- Call to Action Well -->
     <div class="row">
         <div class="col-lg-12">
             <div class="panel-group" id="accordion">
@@ -119,9 +121,9 @@
                         <div class="panel-body">
                             <form action="/refresh_graphs">
                                 <div class="form-group">
-                                    <label for="property-type-filter">Types de propriétés</label>
-                                    <select id="property-type-filter" class="form-control multi-select"
-                                            name="property-type[]"
+                                    <label for="housing-type-filter">Types de propriétés</label>
+                                    <select id="housing-type-filter" class="form-control multi-select"
+                                            name="housing-type[]"
                                             multiple="multiple">
                                         <optgroup label="Maison unifamiliale">
                                             <option>Bungalow</option>
@@ -247,21 +249,10 @@
                                            data-slider-min="0" data-slider-max="2000000" data-slider-value="[0,2000000]"
                                            data-slider-step="25000" data-slider-tooltip="always">
                                 </div>
-                                <!--<div class="form-group">
-                                    <label for="room-filter">Nombre de chambres</label>
-                                    <select class="form-control" id="room-filter">
-                                        <option>Peu importe</option>
-                                        <option>1+</option>
-                                        <option>2+</option>
-                                        <option>3+</option>
-                                        <option>4+</option>
-                                        <option>5+</option>
-                                    </select>
-                                </div>-->
                                 <div class="form-group">
-                                    <label for="materials-filter">Matériaux:</label>
-                                    <select id="materials-filter" class="form-control multi-select"
-                                            name="materials[]"
+                                    <label for="external-facing-filter">Matériaux</label>
+                                    <select id="external-facing-filter" class="form-control multi-select"
+                                            name="external-facing[]"
                                             multiple="multiple">
                                         <option>Acier</option>
                                         <option>Acrylique</option>
@@ -287,7 +278,6 @@
                                         <option>Tôle</option>
                                     </select>
                                 </div>
-                                <!--<button type="button" class="btn btn-primary btn-lg pull-right">Rafraîchir</button>-->
                             </form>
                         </div>
                     </div>
@@ -367,6 +357,11 @@
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
 
+<!-- Core jQuery Confirm JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+<!-- Custom Helper JavaScript -->
+<script src="/javascripts/helper.js"></script>
 
 <!-- Custom ChartJS JavaScript -->
 <script src="/javascripts/data-api-client.js"></script>
@@ -385,6 +380,7 @@
     // Select2
     $(document).ready(function () {
         $('.multi-select').select2();
+        updateAllCharts();
     });
 
     // Sliders

@@ -4,16 +4,23 @@ let mongoClient = require('mongodb').MongoClient;
 let ObjectID = require('mongodb').ObjectID;
 module.exports = router;
 
-
-// const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@localhost:27017/duproprio';
 const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@ds133796.mlab.com:33796/duproprio';
 
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
+    let housingTypes;
+    if (req.query.housingTypes) {
+        housingTypes = req.query.housingTypes.split(':');
+    }
+
+    let externalFacing;
+    if (req.query.externalFacing) {
+        externalFacing = req.query.externalFacing.split(':');
+    }
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -29,7 +36,9 @@ router.get('/', function (req, res, next) {
             },
             $and: [
                 {price: {$gte: min}},
-                {price: {$lte: max}}
+                {price: {$lte: max}},
+                createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
+                createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
             ]
         };
 
@@ -54,12 +63,21 @@ router.get('/', function (req, res, next) {
 });
 
 
-router.get('/piechart-by-external', function (req, res, next) {
+router.get('/piechart-by-external', function (req, res) {
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
+    let housingTypes;
+    if (req.query.housingTypes) {
+        housingTypes = req.query.housingTypes.split(':');
+    }
+
+    let externalFacing;
+    if (req.query.externalFacing) {
+        externalFacing = req.query.externalFacing.split(':');
+    }
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -76,7 +94,9 @@ router.get('/piechart-by-external', function (req, res, next) {
                 query: {
                     $and: [
                         {price: {$gte: min}},
-                        {price: {$lte: max}}
+                        {price: {$lte: max}},
+                        createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
+                        createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
                     ]
                 }
             }
@@ -97,14 +117,21 @@ router.get('/piechart-by-external', function (req, res, next) {
 });
 
 
-router.get('/piechart-by-heating', function (req, res, next) {
-
-
+router.get('/piechart-by-heating', function (req, res) {
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
+    let housingTypes;
+    if (req.query.housingTypes) {
+        housingTypes = req.query.housingTypes.split(':');
+    }
+
+    let externalFacing;
+    if (req.query.externalFacing) {
+        externalFacing = req.query.externalFacing.split(':');
+    }
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -122,7 +149,9 @@ router.get('/piechart-by-heating', function (req, res, next) {
                 query: {
                     $and: [
                         {price: {$gte: min}},
-                        {price: {$lte: max}}
+                        {price: {$lte: max}},
+                        createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
+                        createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
                     ]
                 }
             }
@@ -144,13 +173,21 @@ router.get('/piechart-by-heating', function (req, res, next) {
 });
 
 
-
-router.get('/bar-chart-by-price', function (req, res, next) {
+router.get('/bar-chart-by-price', function (req, res) {
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
+    let housingTypes;
+    if (req.query.housingTypes) {
+        housingTypes = req.query.housingTypes.split(':');
+    }
+
+    let externalFacing;
+    if (req.query.externalFacing) {
+        externalFacing = req.query.externalFacing.split(':');
+    }
 
     let boundaries = [];
     let boundaryStep = 50000;
@@ -174,7 +211,9 @@ router.get('/bar-chart-by-price', function (req, res, next) {
                 query: {
                     $and: [
                         {price: {$gte: min}},
-                        {price: {$lte: max}}
+                        {price: {$lte: max}},
+                        createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
+                        createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
                     ]
                 }
             }
@@ -198,12 +237,21 @@ router.get('/bar-chart-by-price', function (req, res, next) {
     })
 });
 
-router.get('/top-houses', function (req, res, next) {
+router.get('/top-houses', function (req, res) {
     let lat = parseFloat(req.query.lat);
     let long = parseFloat(req.query.long);
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
+    let housingTypes;
+    if (req.query.housingTypes) {
+        housingTypes = req.query.housingTypes.split(':');
+    }
+
+    let externalFacing;
+    if (req.query.externalFacing) {
+        externalFacing = req.query.externalFacing.split(':');
+    }
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -220,7 +268,9 @@ router.get('/top-houses', function (req, res, next) {
                 query: {
                     $and: [
                         {price: {$gte: min}},
-                        {price: {$lte: max}}
+                        {price: {$lte: max}},
+                        createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
+                        createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
                     ]
                 }
             }
@@ -231,13 +281,13 @@ router.get('/top-houses', function (req, res, next) {
                     "construction_year": 1,
                     "coordinates": 1,
                     "postal_code": 1,
+                    "housing_type": 1,
                     "external_facing": 1,
                     "price": 1,
                     "facade_image": 1,
                     "listing_id": 1
                 }
             }
-
         ];
 
         db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
@@ -249,13 +299,12 @@ router.get('/top-houses', function (req, res, next) {
     })
 });
 
-router.get('/delete-image', function (req, res, next) {
+router.post('/delete-image', function (req, res) {
     let imageToRemove = String(req.query.image);
     let house = String(req.query.house);
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
-        console.log("okay");
         let houseId = ObjectID(house);
         let query = {"_id": houseId};
         let update = {$pull: {"facade_image": imageToRemove}};
@@ -270,3 +319,14 @@ router.get('/delete-image', function (req, res, next) {
     })
 
 });
+
+let createFilter = function (filter, value, dismissNull = false) {
+    if (dismissNull && !value) {
+        console.log('return {}');
+        return {};
+    }
+    else {
+        console.log('return', filter);
+        return filter;
+    }
+};

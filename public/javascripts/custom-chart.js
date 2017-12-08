@@ -91,22 +91,3 @@ function generateBorderColors(count) {
 
     return borderColors;
 }
-
-/**
- Requis:
- Title
- Type
- Liste de libellés avec valeurs
-
- Facultatif:
- Indicateur afficher légende
- Indicateur afficher tooltips
-
- Générer:
- Couleurs des graphiques
- Couleurs des bordures
- Taille des polices
- Position légende
-
- */
-
