@@ -7,10 +7,6 @@ $(".form-control").change(function () {
     }
 });
 
-$(document).ready(function () {
-    updateAllCharts();
-});
-
 let updateAllCharts = function () {
     updateHouses();
     updatePieCharts();
@@ -89,12 +85,13 @@ let updateHouses = function () {
     });
 };
 
-
 let updateTable = function () {
     let lat = map.data.map.center.lat();
     let long = map.data.map.center.lng();
     let distance = $("#search-range").val();
     let minmaxString = $("#price-range-filter").attr("data-value");
+    let housingTypes = $("#housing-type-filter").select2('val').join(':');
+    let externalFacing = $("#external-facing-filter").select2('val').join(':');
 
     let minmax = minmaxString.split(",");
 
@@ -103,12 +100,22 @@ let updateTable = function () {
     let queryDistance = "&distance=".concat(distance);
     let queryMin = "&min=".concat(minmax[0]);
     let queryMax = "&max=".concat(minmax[1]);
+    let queryHousingTypes = "&housingTypes=".concat(housingTypes);
+    let queryExternalFacing = "&externalFacing=".concat(externalFacing);
 
     let query = "/queries/top-houses/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
+
+    if (housingTypes) {
+        query = query.concat(queryHousingTypes);
+    }
+
+    if (externalFacing) {
+        query = query.concat(queryExternalFacing);
+    }
+
     if (topHouseTable !== undefined) {
         topHouseTable.destroy();
     }
-
 
     tableRefreshBusy = true;
 
