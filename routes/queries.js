@@ -255,6 +255,7 @@ router.get('/top-houses', function (req, res) {
             }
         ];
 
+
         db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
             if (err) throw err;
 
@@ -263,6 +264,63 @@ router.get('/top-houses', function (req, res) {
         })
     })
 });
+
+/*
+router.get('/top-houses', function (req, res) {
+    let lat = parseFloat(req.query.lat);
+    let long = parseFloat(req.query.long);
+    let distance = parseFloat(req.query.distance) * 1000;
+    let min = parseInt(req.query.min);
+    let max = parseInt(req.query.max);
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
+
+    mongoClient.connect(mongoUrl, function (err, db) {
+        if (err) throw err;
+
+        let aggregate_pipeline = [{
+            $geoNear: {
+                distanceField: "coordinates",
+                spherical: true,
+                near: {
+                    type: "Point",
+                    coordinates: [lat, long]
+                },
+                maxDistance: distance,
+                query: {
+                    $and: [
+                        {price: {$gte: min}},
+                        {price: {$lte: max}},
+                        createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
+                        createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
+                    ]
+                }
+            }
+        }, {$sort: {coordinates: 1}},
+            {
+                $project: {
+                    "_id": 1,
+                    "construction_year": 1,
+                    "coordinates": 1,
+                    "postal_code": 1,
+                    "housing_type": 1,
+                    "external_facing": 1,
+                    "price": 1,
+                    "facade_image": 1,
+                    "listing_id": 1
+                }
+            }
+        ];
+
+        db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
+            if (err) throw err;
+
+            res.json(result);
+            db.close();
+        })
+    })
+});
+ */
 
 router.post('/delete-image', function (req, res) {
     let imageToRemove = String(req.query.image);
@@ -299,69 +357,3 @@ let strToTable = function (text, separator = ":") {
     }
     return table;
 };
-
-/** dead code **/
-
-let createStandardAggregation = function (request) {
-    let standardAggregation = new Aggregation();
-    standardAggregation.setSearchZone(parseFloat(request.query.long), parseFloat(request.query.lat), parseFloat(request.query.distance) * 1000);
-    standardAggregation.addFilter({price: {$gte: parseInt(request.query.min)}});
-    standardAggregation.addFilter({price: {$lte: parseInt(request.query.max)}});
-    let housingTypes = strToTable(request.query.housingTypes);
-    standardAggregation.addFilter({"housing_type": {$in: housingTypes}}, housingTypes, true);
-    let externalFacings = strToTable(request.query.externalFacing);
-    standardAggregation.addFilter({"external_facing": {$in: standardAggregation}}, externalFacings, true);
-
-    return standardAggregation;
-};
-
-function Aggregation() {
-    let self = this;
-    let longitude, latitude, maxDistance, filters, sort, additionalArguments;
-
-    self.setSearchZone = function (longitude, latitude, maxDistance) {
-        self.longitude = longitude;
-        self.latitude = latitude;
-        self.maxDistance = maxDistance;
-    };
-
-    self.addFilter = function (filter, valueToValidate = null, dismissNull = false) {
-        if (!self.filters) {
-            self.filters = [];
-        }
-        if (dismissNull && !valueToValidate) {
-        }
-        else {
-            self.filters.push(filter);
-        }
-    };
-
-    self.setSort = function (sort) {
-        self.sort = sort;
-    };
-
-    self.addArgument = function (argument) {
-        if (!self.additionalArguments) {
-            self.additionalArguments = [];
-        }
-        self.additionalArguments.push(argument);
-    };
-
-    self.generate = function () {
-        return [{
-            $geoNear: {
-                distanceField: "coordinates",
-                spherical: true,
-                near: {
-                    type: "Point",
-                    coordinates: [self.latitude, self.longitude]
-                },
-                maxDistance: self.maxDistance,
-                query: {
-                    $and: self.filters
-                }
-            }
-        }, {$sort: self.sort},
-        ].concat(self.additionalArguments);
-    };
-}
