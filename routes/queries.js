@@ -12,15 +12,8 @@ router.get('/', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
-    let housingTypes;
-    if (req.query.housingTypes) {
-        housingTypes = req.query.housingTypes.split(':');
-    }
-
-    let externalFacing;
-    if (req.query.externalFacing) {
-        externalFacing = req.query.externalFacing.split(':');
-    }
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -69,15 +62,8 @@ router.get('/piechart-by-external', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
-    let housingTypes;
-    if (req.query.housingTypes) {
-        housingTypes = req.query.housingTypes.split(':');
-    }
-
-    let externalFacing;
-    if (req.query.externalFacing) {
-        externalFacing = req.query.externalFacing.split(':');
-    }
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -123,15 +109,8 @@ router.get('/piechart-by-heating', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
-    let housingTypes;
-    if (req.query.housingTypes) {
-        housingTypes = req.query.housingTypes.split(':');
-    }
-
-    let externalFacing;
-    if (req.query.externalFacing) {
-        externalFacing = req.query.externalFacing.split(':');
-    }
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -179,15 +158,8 @@ router.get('/bar-chart-by-price', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
-    let housingTypes;
-    if (req.query.housingTypes) {
-        housingTypes = req.query.housingTypes.split(':');
-    }
-
-    let externalFacing;
-    if (req.query.externalFacing) {
-        externalFacing = req.query.externalFacing.split(':');
-    }
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
 
     let boundaries = [];
     let boundaryStep = 50000;
@@ -243,15 +215,8 @@ router.get('/top-houses', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
-    let housingTypes;
-    if (req.query.housingTypes) {
-        housingTypes = req.query.housingTypes.split(':');
-    }
-
-    let externalFacing;
-    if (req.query.externalFacing) {
-        externalFacing = req.query.externalFacing.split(':');
-    }
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -308,8 +273,6 @@ router.post('/delete-image', function (req, res) {
         let houseId = ObjectID(house);
         let query = {"_id": houseId};
         let update = {$pull: {"facade_image": imageToRemove}};
-        console.log(query);
-        console.log(update);
         db.collection("listing_properties").updateOne(query, update).then(function () {
             res.json({'ok': 1});
             window.close();
@@ -322,11 +285,83 @@ router.post('/delete-image', function (req, res) {
 
 let createFilter = function (filter, value, dismissNull = false) {
     if (dismissNull && !value) {
-        console.log('return {}');
         return {};
     }
     else {
-        console.log('return', filter);
         return filter;
     }
 };
+
+let strToTable = function (text, separator = ":") {
+    let table;
+    if (text) {
+        table = text.split(separator);
+    }
+    return table;
+};
+
+/** dead code **/
+
+let createStandardAggregation = function (request) {
+    let standardAggregation = new Aggregation();
+    standardAggregation.setSearchZone(parseFloat(request.query.long), parseFloat(request.query.lat), parseFloat(request.query.distance) * 1000);
+    standardAggregation.addFilter({price: {$gte: parseInt(request.query.min)}});
+    standardAggregation.addFilter({price: {$lte: parseInt(request.query.max)}});
+    let housingTypes = strToTable(request.query.housingTypes);
+    standardAggregation.addFilter({"housing_type": {$in: housingTypes}}, housingTypes, true);
+    let externalFacings = strToTable(request.query.externalFacing);
+    standardAggregation.addFilter({"external_facing": {$in: standardAggregation}}, externalFacings, true);
+
+    return standardAggregation;
+};
+
+function Aggregation() {
+    let self = this;
+    let longitude, latitude, maxDistance, filters, sort, additionalArguments;
+
+    self.setSearchZone = function (longitude, latitude, maxDistance) {
+        self.longitude = longitude;
+        self.latitude = latitude;
+        self.maxDistance = maxDistance;
+    };
+
+    self.addFilter = function (filter, valueToValidate = null, dismissNull = false) {
+        if (!self.filters) {
+            self.filters = [];
+        }
+        if (dismissNull && !valueToValidate) {
+        }
+        else {
+            self.filters.push(filter);
+        }
+    };
+
+    self.setSort = function (sort) {
+        self.sort = sort;
+    };
+
+    self.addArgument = function (argument) {
+        if (!self.additionalArguments) {
+            self.additionalArguments = [];
+        }
+        self.additionalArguments.push(argument);
+    };
+
+    self.generate = function () {
+        return [{
+            $geoNear: {
+                distanceField: "coordinates",
+                spherical: true,
+                near: {
+                    type: "Point",
+                    coordinates: [self.latitude, self.longitude]
+                },
+                maxDistance: self.maxDistance,
+                query: {
+                    $and: self.filters
+                }
+            }
+        }, {$sort: self.sort},
+        ].concat(self.additionalArguments);
+    };
+}
