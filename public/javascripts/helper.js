@@ -45,3 +45,33 @@ function SimpleLock() {
         return !self.locked;
     };
 }
+
+let loadCsv = function () {
+    $.confirm({
+        title: 'Export CSV',
+        type: 'green',
+        content: 'Voulez-vous réellement exporter les données en format CSV? Cela peut prendre un certain temps...',
+        closeIcon: true,
+        buttons: {
+            ok: {
+                text: "Oui",
+                btnClass: 'btn-success',
+                keys: ['enter'],
+                action: async function () {
+                    let getUrl = '/resources/export.csv';
+                    await sleep(2000);
+                    window.location.replace(getUrl);
+                }
+            },
+            cancel: {
+                text: "Non",
+                action: function () {
+                }
+            }
+        }
+    });
+};
+
+let sleep = function (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
