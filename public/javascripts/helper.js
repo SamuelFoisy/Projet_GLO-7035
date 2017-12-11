@@ -1,23 +1,3 @@
-let buildFilter = function (lon, lat, distance, minPrice, maxPrice, housingTypes, externalFacings) {
-    let queryLat = "lat=".concat(lat);
-    let queryLong = "&long=".concat(long);
-    let queryDistance = "&distance=".concat(distance);
-    let queryMin = "&min=".concat(minmax[0]);
-    let queryMax = "&max=".concat(minmax[1]);
-    let queryHousingTypes = "&housingTypes=".concat(housingTypes);
-    let queryExternalFacing = "&externalFacing=".concat(externalFacing);
-
-    let query = "/queries/top-houses/?".concat(queryLat).concat(queryLong).concat(queryDistance).concat(queryMin).concat(queryMax);
-
-    if (housingTypes) {
-        query = query.concat(queryHousingTypes);
-    }
-
-    if (externalFacing) {
-        query = query.concat(queryExternalFacing);
-    }
-};
-
 let createGetRequestFromFields = function (path) {
     let latitude = map.data.map.center.lat();
     let longitude = map.data.map.center.lng();
@@ -54,14 +34,14 @@ function SimpleLock() {
     let locked = false;
 
     self.lock = function () {
-        locked = true;
+        self.locked = true;
     };
 
     self.unlock = function () {
-        locked = false
+        self.locked = false
     };
 
     self.isAvailable = function () {
-        return !locked;
+        return !self.locked;
     };
 }

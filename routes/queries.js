@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-let mongoClient = require('mongodb').MongoClient;
-let ObjectID = require('mongodb').ObjectID;
+const mongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 module.exports = router;
 
 const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@ds133796.mlab.com:33796/duproprio';
@@ -12,15 +12,8 @@ router.get('/', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
-    let housingTypes;
-    if (req.query.housingTypes) {
-        housingTypes = req.query.housingTypes.split(':');
-    }
-
-    let externalFacing;
-    if (req.query.externalFacing) {
-        externalFacing = req.query.externalFacing.split(':');
-    }
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -69,15 +62,8 @@ router.get('/piechart-by-external', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
-    let housingTypes;
-    if (req.query.housingTypes) {
-        housingTypes = req.query.housingTypes.split(':');
-    }
-
-    let externalFacing;
-    if (req.query.externalFacing) {
-        externalFacing = req.query.externalFacing.split(':');
-    }
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -123,15 +109,8 @@ router.get('/piechart-by-heating', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
-    let housingTypes;
-    if (req.query.housingTypes) {
-        housingTypes = req.query.housingTypes.split(':');
-    }
-
-    let externalFacing;
-    if (req.query.externalFacing) {
-        externalFacing = req.query.externalFacing.split(':');
-    }
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -179,15 +158,8 @@ router.get('/bar-chart-by-price', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
-    let housingTypes;
-    if (req.query.housingTypes) {
-        housingTypes = req.query.housingTypes.split(':');
-    }
-
-    let externalFacing;
-    if (req.query.externalFacing) {
-        externalFacing = req.query.externalFacing.split(':');
-    }
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
 
     let boundaries = [];
     let boundaryStep = 50000;
@@ -243,15 +215,8 @@ router.get('/top-houses', function (req, res) {
     let distance = parseFloat(req.query.distance) * 1000;
     let min = parseInt(req.query.min);
     let max = parseInt(req.query.max);
-    let housingTypes;
-    if (req.query.housingTypes) {
-        housingTypes = req.query.housingTypes.split(':');
-    }
-
-    let externalFacing;
-    if (req.query.externalFacing) {
-        externalFacing = req.query.externalFacing.split(':');
-    }
+    let housingTypes = strToTable(req.query.housingTypes);
+    let externalFacing = strToTable(req.query.externalFacing);
 
     mongoClient.connect(mongoUrl, function (err, db) {
         if (err) throw err;
@@ -290,6 +255,7 @@ router.get('/top-houses', function (req, res) {
             }
         ];
 
+
         db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
             if (err) throw err;
 
@@ -308,8 +274,6 @@ router.post('/delete-image', function (req, res) {
         let houseId = ObjectID(house);
         let query = {"_id": houseId};
         let update = {$pull: {"facade_image": imageToRemove}};
-        console.log(query);
-        console.log(update);
         db.collection("listing_properties").updateOne(query, update).then(function () {
             res.json({'ok': 1});
             window.close();
@@ -322,11 +286,17 @@ router.post('/delete-image', function (req, res) {
 
 let createFilter = function (filter, value, dismissNull = false) {
     if (dismissNull && !value) {
-        console.log('return {}');
         return {};
     }
     else {
-        console.log('return', filter);
         return filter;
     }
+};
+
+let strToTable = function (text, separator = ":") {
+    let table;
+    if (text) {
+        table = text.split(separator);
+    }
+    return table;
 };
