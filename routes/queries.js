@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-let mongoClient = require('mongodb').MongoClient;
-let ObjectID = require('mongodb').ObjectID;
+const mongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 module.exports = router;
 
 const mongoUrl = 'mongodb://DuproprioWebApp:CetteApplicationEstVraimentExcellente@ds133796.mlab.com:33796/duproprio';
@@ -264,63 +264,6 @@ router.get('/top-houses', function (req, res) {
         })
     })
 });
-
-/*
-router.get('/top-houses', function (req, res) {
-    let lat = parseFloat(req.query.lat);
-    let long = parseFloat(req.query.long);
-    let distance = parseFloat(req.query.distance) * 1000;
-    let min = parseInt(req.query.min);
-    let max = parseInt(req.query.max);
-    let housingTypes = strToTable(req.query.housingTypes);
-    let externalFacing = strToTable(req.query.externalFacing);
-
-    mongoClient.connect(mongoUrl, function (err, db) {
-        if (err) throw err;
-
-        let aggregate_pipeline = [{
-            $geoNear: {
-                distanceField: "coordinates",
-                spherical: true,
-                near: {
-                    type: "Point",
-                    coordinates: [lat, long]
-                },
-                maxDistance: distance,
-                query: {
-                    $and: [
-                        {price: {$gte: min}},
-                        {price: {$lte: max}},
-                        createFilter({"housing_type": {$in: housingTypes}}, housingTypes, true),
-                        createFilter({"external_facing": {$in: externalFacing}}, externalFacing, true)
-                    ]
-                }
-            }
-        }, {$sort: {coordinates: 1}},
-            {
-                $project: {
-                    "_id": 1,
-                    "construction_year": 1,
-                    "coordinates": 1,
-                    "postal_code": 1,
-                    "housing_type": 1,
-                    "external_facing": 1,
-                    "price": 1,
-                    "facade_image": 1,
-                    "listing_id": 1
-                }
-            }
-        ];
-
-        db.collection("listing_properties").aggregate(aggregate_pipeline).toArray(function (err, result) {
-            if (err) throw err;
-
-            res.json(result);
-            db.close();
-        })
-    })
-});
- */
 
 router.post('/delete-image', function (req, res) {
     let imageToRemove = String(req.query.image);
